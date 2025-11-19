@@ -12,7 +12,7 @@ const StudentDocuments = () => {
   const loadDocuments = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/documents/public');
+      const response = await api.get('/api/documents/public');
       console.log('Student: Loaded documents:', response.data);
       setDocuments(response.data);
     } catch (error) {
@@ -40,7 +40,7 @@ const StudentDocuments = () => {
 
   const handleDownload = async (documentId, fileId, filename) => {
     try {
-      const response = await axios.get(`/api/documents/${documentId}/files/${fileId}/download`, {
+      const response = await api.get(`/api/documents/${documentId}/files/${fileId}/download`, {
         responseType: 'blob'
       });
       

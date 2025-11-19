@@ -27,7 +27,7 @@ const AdminAssignments = () => {
 
   const fetchAssignments = async () => {
     try {
-      const response = await axios.get('/api/assignments');
+      const response = await api.get('/api/assignments');
       setAssignments(response.data);
     } catch (error) {
       console.error('Error fetching assignments:', error);
@@ -49,9 +49,9 @@ const AdminAssignments = () => {
     
     try {
       if (editingAssignment) {
-        await axios.put(`/api/assignments/${editingAssignment._id}`, formData);
+        await api.put(`/api/assignments/${editingAssignment._id}`, formData);
       } else {
-        await axios.post('/api/assignments', formData);
+        await api.post('/api/assignments', formData);
       }
       
       setShowForm(false);
@@ -82,7 +82,7 @@ const AdminAssignments = () => {
     if (!window.confirm('Are you sure you want to delete this assignment?')) return;
     
     try {
-      await axios.delete(`/api/assignments/${id}`);
+      await api.delete(`/api/assignments/${id}`);
       fetchAssignments();
     } catch (error) {
       console.error('Error deleting assignment:', error);

@@ -20,10 +20,10 @@ const Home = () => {
       try {
         if (user) {
           const [notesResponse, usersResponse] = await Promise.all([
-            axios.get('/api/notes'),
+            api.get('/api/notes'),
             user?.role === 'admin' 
-              ? axios.get('/api/users/stats/overview')
-              : axios.get('/api/users/stats/basic')
+              ? api.get('/api/users/stats/overview')
+              : api.get('/api/users/stats/basic')
           ]);
 
           const notes = notesResponse.data;
@@ -37,8 +37,8 @@ const Home = () => {
           });
         } else {
           const [notesResponse, usersResponse] = await Promise.all([
-            axios.get('/api/notes/stats/public'),
-            axios.get('/api/users/stats/public')
+            api.get('/api/notes/stats/public'),
+            api.get('/api/users/stats/public')
           ]);
 
           setStats({

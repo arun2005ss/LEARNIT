@@ -22,7 +22,7 @@ const Notes = () => {
   const fetchNotes = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/notes');
+      const response = await api.get('/api/notes');
       const notesData = response.data;
       
       setNotes(notesData);

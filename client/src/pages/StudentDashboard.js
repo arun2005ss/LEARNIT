@@ -17,7 +17,7 @@ const StudentDashboard = () => {
   const fetchStudentStats = async () => {
     try {
       // Fetch student-specific data
-      const notesResponse = await axios.get('/api/notes');
+      const notesResponse = await api.get('/api/notes');
       const notes = notesResponse.data || [];
 
       setStats({

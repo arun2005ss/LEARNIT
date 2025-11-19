@@ -77,7 +77,7 @@ const CreateNote = () => {
         tags: formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag)
       };
 
-      await axios.post('/api/notes', noteData);
+      await api.post('/api/notes', noteData);
       
       navigate('/notes');
     } catch (error) {

@@ -21,7 +21,7 @@ const NoteDetail = () => {
 
   const fetchNote = async () => {
     try {
-      const response = await axios.get(`/api/notes/${id}`);
+      const response = await api.get(`/api/notes/${id}`);
       setNote(response.data);
     } catch (error) {
       console.error('Error fetching note:', error);
@@ -36,7 +36,7 @@ const NoteDetail = () => {
 
     try {
       setSubmitting(true);
-      await axios.post(`/api/notes/${id}/comments`, { content: comment });
+      await api.post(`/api/notes/${id}/comments`, { content: comment });
       setComment('');
       fetchNote();
     } catch (error) {
@@ -63,7 +63,7 @@ const NoteDetail = () => {
 
     try {
       setDeleting(true);
-      await axios.delete(`/api/notes/${id}`);
+      await api.delete(`/api/notes/${id}`);
       navigate('/notes');
     } catch (error) {
       console.error('Error deleting note:', error);

@@ -32,7 +32,7 @@ const EditNote = () => {
 
   const fetchNote = async () => {
     try {
-      const response = await axios.get(`/api/notes/${id}`);
+      const response = await api.get(`/api/notes/${id}`);
       const noteData = response.data;
       setNote(noteData);
       
@@ -58,7 +58,7 @@ const EditNote = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get('/api/users');
+      const response = await api.get('/api/users');
       setAvailableUsers(response.data.filter(u => u._id !== user._id));
     } catch (error) {
       console.error('Error fetching users:', error);
@@ -168,7 +168,7 @@ const EditNote = () => {
         tags: formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag)
       };
 
-      await axios.put(`/api/notes/${id}`, noteData);
+      await api.put(`/api/notes/${id}`, noteData);
       
       navigate(`/notes/${id}`);
     } catch (error) {
