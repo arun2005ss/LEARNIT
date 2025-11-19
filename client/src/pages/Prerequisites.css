@@ -1,0 +1,10 @@
+.prereq .page-header { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+.prereq .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+.prereq .card { display: flex; justify-content: space-between; align-items: center; border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px; text-decoration: none; color: #111827; background: #fff; }
+.prereq .card:hover { border-color: #2563eb; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.prereq .card-title { font-weight: 600; margin-bottom: 4px; }
+.prereq .card-desc { color: #6b7280; font-size: 13px; }
+.prereq .card-action { display: flex; gap: 8px; color: #2563eb; align-items: center; }
+.prereq .dl-icon { color: #059669; }
+
+
