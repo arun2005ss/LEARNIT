@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 
 const AuthContext = createContext();
 
@@ -16,21 +16,16 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState(localStorage.getItem('token'));
 
-  if (token) {
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-  }
-
   useEffect(() => {
     const initializeAuth = async () => {
       if (token) {
         try {
-          const response = await axios.get('/api/auth/profile');
+          const response = await api.get('/auth/profile');
           setUser(response.data);
         } catch (error) {
           console.error('Token validation failed:', error);
           localStorage.removeItem('token');
           setToken(null);
-          delete axios.defaults.headers.common['Authorization'];
         }
       }
       setLoading(false);
@@ -45,9 +40,8 @@ export const AuthProvider = ({ children }) => {
         const token = localStorage.getItem('token');
         if (token) {
           setToken(token);
-          axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
           
-          const response = await axios.get('/api/auth/profile');
+          const response = await api.get('/auth/profile');
           setUser(response.data);
           
           return { success: true };
@@ -55,13 +49,12 @@ export const AuthProvider = ({ children }) => {
         return { success: false, message: 'OAuth authentication failed' };
       }
       
-      const response = await axios.post('/api/auth/login', { email, password });
+      const response = await api.post('/auth/login', { email, password });
       const { token: newToken, user: userData } = response.data;
       
       localStorage.setItem('token', newToken);
       setToken(newToken);
       setUser(userData);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
       
       return { success: true };
     } catch (error) {
@@ -74,13 +67,12 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (userData) => {
     try {
-      const response = await axios.post('/api/auth/register', userData);
+      const response = await api.post('/auth/register', userData);
       const { token: newToken, user: newUser } = response.data;
       
       localStorage.setItem('token', newToken);
       setToken(newToken);
       setUser(newUser);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
       
       return { success: true };
     } catch (error) {
@@ -95,12 +87,11 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('token');
     setToken(null);
     setUser(null);
-    delete axios.defaults.headers.common['Authorization'];
   };
 
   const updateProfile = async (profileData) => {
     try {
-      const response = await axios.put('/api/auth/profile', profileData);
+      const response = await api.put('/auth/profile', profileData);
       setUser(response.data);
       return { success: true };
     } catch (error) {
@@ -112,7 +103,10 @@ export const AuthProvider = ({ children }) => {
   };
 
   const loginWithGoogle = () => {
-    window.location.href = 'http://localhost:5000/api/auth/google';
+    const googleAuthUrl = process.env.NODE_ENV === 'production' 
+      ? '/api/auth/google' 
+      : 'http://localhost:5000/api/auth/google';
+    window.location.href = googleAuthUrl;
   };
 
   const value = {
