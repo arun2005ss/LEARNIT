@@ -15,10 +15,6 @@ const NoteDetail = () => {
   const [submitting, setSubmitting] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
-  useEffect(() => {
-    fetchNote();
-  }, [id, fetchNote]);
-
   const fetchNote = useCallback(async () => {
     try {
       const response = await api.get(`/api/notes/${id}`);
@@ -29,6 +25,10 @@ const NoteDetail = () => {
       setLoading(false);
     }
   }, [id]);
+
+  useEffect(() => {
+    fetchNote();
+  }, [id, fetchNote]);
 
   const handleCommentSubmit = async (e) => {
     e.preventDefault();

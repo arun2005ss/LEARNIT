@@ -16,6 +16,44 @@ const CourseQuiz = () => {
   // Mock MCQ data - in real app, this would come from API
   const [questions, setQuestions] = useState([]);
 
+  const generateMockQuestions = useCallback((courseId) => {
+    const courseQuestions = {
+      '1': generateCProgrammingQuestions(),
+      '2': generateDSAQuestions(),
+      '3': generateDBMSQuestions(),
+      '4': generateReactQuestions()
+    };
+    return courseQuestions[courseId] || [];
+  }, []);
+
+  const fetchQuizQuestions = useCallback(async () => {
+    try {
+      // Mock questions based on course
+      const mockQuestions = generateMockQuestions(courseId);
+      setQuestions(mockQuestions);
+    } catch (error) {
+      console.error('Error fetching quiz questions:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [courseId, generateMockQuestions]);
+
+  const submitQuiz = useCallback(() => {
+    let correctAnswers = 0;
+    questions.forEach(question => {
+      if (answers[question.id] === question.correct) {
+        correctAnswers++;
+      }
+    });
+    
+    const percentage = Math.round((correctAnswers / questions.length) * 100);
+    setScore(percentage);
+    setQuizCompleted(true);
+    
+    // In real app, submit to backend
+    console.log('Quiz submitted:', { answers, score: percentage });
+  }, [questions, answers]);
+
   useEffect(() => {
     fetchQuizQuestions();
   }, [courseId, fetchQuizQuestions]);
@@ -28,28 +66,6 @@ const CourseQuiz = () => {
       submitQuiz();
     }
   }, [timeLeft, quizCompleted, submitQuiz]);
-
-  const fetchQuizQuestions = useCallback(async () => {
-    try {
-      // Mock questions based on course
-      const mockQuestions = generateMockQuestions(courseId);
-      setQuestions(mockQuestions);
-    } catch (error) {
-      console.error('Error fetching quiz questions:', error);
-    } finally {
-      setLoading(false);
-    }
-  }, [courseId]);
-
-  const generateMockQuestions = (courseId) => {
-    const courseQuestions = {
-      '1': generateCProgrammingQuestions(),
-      '2': generateDSAQuestions(),
-      '3': generateDBMSQuestions(),
-      '4': generateReactQuestions()
-    };
-    return courseQuestions[courseId] || [];
-  };
 
   const generateCProgrammingQuestions = () => {
     // Generate 50 C programming questions
@@ -863,22 +879,6 @@ const CourseQuiz = () => {
   const handleSubmit = () => {
     submitQuiz();
   };
-
-  const submitQuiz = useCallback(() => {
-    let correctAnswers = 0;
-    questions.forEach(question => {
-      if (answers[question.id] === question.correct) {
-        correctAnswers++;
-      }
-    });
-    
-    const percentage = Math.round((correctAnswers / questions.length) * 100);
-    setScore(percentage);
-    setQuizCompleted(true);
-    
-    // In real app, submit to backend
-    console.log('Quiz submitted:', { answers, score: percentage });
-  }, [questions, answers]);
 
   const formatTime = (seconds) => {
     const hours = Math.floor(seconds / 3600);

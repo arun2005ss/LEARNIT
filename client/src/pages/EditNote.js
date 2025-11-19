@@ -25,10 +25,20 @@ const EditNote = () => {
   const [availableUsers, setAvailableUsers] = useState([]);
   const [showAccessControl, setShowAccessControl] = useState(false);
 
-  useEffect(() => {
-    fetchNote();
-    fetchUsers();
-  }, [id, fetchNote, fetchUsers]);
+  const hasEditAccess = useCallback((noteData) => {
+    if (!user || !noteData) return false;
+    
+    if (user.role === 'admin') return true;
+    
+    if (noteData.author?._id === user._id) return true;
+    
+    if (noteData.accessList && noteData.accessList.length > 0) {
+      const userAccess = noteData.accessList.find(access => access.user === user._id);
+      return userAccess && userAccess.accessType === 'edit';
+    }
+    
+    return false;
+  }, [user]);
 
   const fetchNote = useCallback(async () => {
     try {
@@ -65,20 +75,10 @@ const EditNote = () => {
     }
   }, [user._id]);
 
-  const hasEditAccess = (noteData) => {
-    if (!user || !noteData) return false;
-    
-    if (user.role === 'admin') return true;
-    
-    if (noteData.author?._id === user._id) return true;
-    
-    if (noteData.accessList && noteData.accessList.length > 0) {
-      const userAccess = noteData.accessList.find(access => access.user === user._id);
-      return userAccess && userAccess.accessType === 'edit';
-    }
-    
-    return false;
-  };
+  useEffect(() => {
+    fetchNote();
+    fetchUsers();
+  }, [id, fetchNote, fetchUsers]);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;

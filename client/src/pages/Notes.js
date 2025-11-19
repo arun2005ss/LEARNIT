@@ -15,10 +15,6 @@ const Notes = () => {
   const [availableTags, setAvailableTags] = useState([]);
   const [showFilters, setShowFilters] = useState(false);
 
-  useEffect(() => {
-    fetchNotes();
-  }, []);
-
   const fetchNotes = async () => {
     try {
       setLoading(true);
@@ -36,10 +32,6 @@ const Notes = () => {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    filterNotes();
-  }, [searchTerm, selectedTags, notes, filterNotes]);
 
   const filterNotes = useCallback(() => {
     let filtered = notes;
@@ -59,6 +51,14 @@ const Notes = () => {
 
     setFilteredNotes(filtered);
   }, [notes, searchTerm, selectedTags]);
+
+  useEffect(() => {
+    fetchNotes();
+  }, []);
+
+  useEffect(() => {
+    filterNotes();
+  }, [searchTerm, selectedTags, notes, filterNotes]);
 
   const handleTagToggle = (tag) => {
     setSelectedTags(prev =>
