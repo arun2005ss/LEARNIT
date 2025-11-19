@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { FaCalendar, FaFileAlt, FaUpload, FaCheck, FaTimes, FaEye } from 'react-icons/fa';
-import api from '../api/axios';
+import axios from 'axios';
 import './Assignments.css';
 
 const Assignments = () => {
@@ -23,7 +23,7 @@ const Assignments = () => {
 
   const fetchAssignments = async () => {
     try {
-      const response = await api.get('/api/assignments');
+      const response = await axios.get('/api/assignments');
       setAssignments(response.data);
     } catch (error) {
       console.error('Error fetching assignments:', error);
@@ -72,7 +72,7 @@ const Assignments = () => {
         console.log(key, value);
       }
 
-      const response = await api.post(`/api/assignments/${selectedAssignment._id}/submit`, formData, {
+      const response = await axios.post(`/api/assignments/${selectedAssignment._id}/submit`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

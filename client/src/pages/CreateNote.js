@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { FaSave, FaTimes, FaTag } from 'react-icons/fa';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import api from '../api/axios';
+import axios from 'axios';
 import './CreateNote.css';
 
 const CreateNote = () => {
@@ -77,7 +77,7 @@ const CreateNote = () => {
         tags: formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag)
       };
 
-      await api.post('/api/notes', noteData);
+      await axios.post('/api/notes', noteData);
       
       navigate('/notes');
     } catch (error) {

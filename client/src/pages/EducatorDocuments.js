@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FaFolderPlus, FaUpload, FaTrash, FaFolder, FaDownload } from 'react-icons/fa';
-import api from '../api/axios';
+import axios from 'axios';
 import './EducatorDocuments.css';
 
 const EducatorDocuments = () => {
@@ -15,7 +15,7 @@ const EducatorDocuments = () => {
   const loadDocuments = async () => {
     try {
       setLoading(true);
-      const response = await api.get('/api/documents');
+      const response = await axios.get('/api/documents');
       console.log('Loaded documents:', response.data);
       setDocuments(response.data);
     } catch (error) {
@@ -34,7 +34,7 @@ const EducatorDocuments = () => {
     if (!newDocument.trim()) return;
     
     try {
-      const response = await api.post('/api/documents', {
+      const response = await axios.post('/api/documents', {
         title: newDocument.trim(),
         description: ''
       });
@@ -63,7 +63,7 @@ const EducatorDocuments = () => {
         formData.append('files', file);
       });
 
-      const response = await api.post(`/api/documents/${selectedDocument}/files`, formData, {
+      const response = await axios.post(`/api/documents/${selectedDocument}/files`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         }
@@ -89,7 +89,7 @@ const EducatorDocuments = () => {
     }
 
     try {
-      await api.delete(`/api/documents/${documentId}`);
+      await axios.delete(`/api/documents/${documentId}`);
       setDocuments(documents.filter(doc => doc._id !== documentId));
       console.log('Document deleted');
     } catch (error) {
@@ -104,7 +104,7 @@ const EducatorDocuments = () => {
     }
 
     try {
-      const response = await api.delete(`/api/documents/${documentId}/files/${fileId}`);
+      const response = await axios.delete(`/api/documents/${documentId}/files/${fileId}`);
       setDocuments(documents.map(doc => 
         doc._id === documentId ? response.data : doc
       ));
@@ -117,7 +117,7 @@ const EducatorDocuments = () => {
 
   const handleDownload = async (documentId, fileId, filename) => {
     try {
-      const response = await api.get(`/api/documents/${documentId}/files/${fileId}/download`, {
+      const response = await axios.get(`/api/documents/${documentId}/files/${fileId}/download`, {
         responseType: 'blob'
       });
       

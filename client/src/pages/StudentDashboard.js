@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FaBook, FaTasks, FaChartLine, FaUser } from 'react-icons/fa';
-import api from '../api/axios';
+import axios from 'axios';
 import './StudentDashboard.css';
 
 const StudentDashboard = () => {
@@ -17,7 +17,7 @@ const StudentDashboard = () => {
   const fetchStudentStats = async () => {
     try {
       // Fetch student-specific data
-      const notesResponse = await api.get('/api/notes');
+      const notesResponse = await axios.get('/api/notes');
       const notes = notesResponse.data || [];
 
       setStats({

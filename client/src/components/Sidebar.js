@@ -9,6 +9,7 @@ import {
   FaPlus, 
   FaUser, 
   FaSignOutAlt, 
+  FaCog, 
   FaBars, 
   FaTimes,
   FaChartBar,

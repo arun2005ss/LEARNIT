@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { FaSearch, FaFilter, FaComments, FaCalendar, FaUser, FaTag } from 'react-icons/fa';
-import api from '../api/axios';
+import axios from 'axios';
 import './Notes.css';
 
 const Notes = () => {
@@ -15,10 +15,14 @@ const Notes = () => {
   const [availableTags, setAvailableTags] = useState([]);
   const [showFilters, setShowFilters] = useState(false);
 
+  useEffect(() => {
+    fetchNotes();
+  }, []);
+
   const fetchNotes = async () => {
     try {
       setLoading(true);
-      const response = await api.get('/api/notes');
+      const response = await axios.get('/api/notes');
       const notesData = response.data;
       
       setNotes(notesData);
@@ -33,7 +37,11 @@ const Notes = () => {
     }
   };
 
-  const filterNotes = useCallback(() => {
+  useEffect(() => {
+    filterNotes();
+  }, [searchTerm, selectedTags, notes]);
+
+  const filterNotes = () => {
     let filtered = notes;
 
     if (searchTerm) {
@@ -50,15 +58,7 @@ const Notes = () => {
     }
 
     setFilteredNotes(filtered);
-  }, [notes, searchTerm, selectedTags]);
-
-  useEffect(() => {
-    fetchNotes();
-  }, []);
-
-  useEffect(() => {
-    filterNotes();
-  }, [searchTerm, selectedTags, notes, filterNotes]);
+  };
 
   const handleTagToggle = (tag) => {
     setSelectedTags(prev =>

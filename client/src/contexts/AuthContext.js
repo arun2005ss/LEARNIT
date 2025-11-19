@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import api from '../api/axios';
+import axios from 'axios';
 
 const AuthContext = createContext();
 
@@ -17,35 +17,22 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem('token'));
 
   if (token) {
-    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   }
 
   useEffect(() => {
     const initializeAuth = async () => {
-      console.log('AuthContext: Starting initialization');
-      // Add timeout to prevent infinite loading
-      const timeout = setTimeout(() => {
-        console.warn('Auth initialization timeout - proceeding without auth');
-        setLoading(false);
-      }, 5000); // 5 second timeout
-
       if (token) {
-        console.log('AuthContext: Token found, validating...');
         try {
-          const response = await api.get('/api/auth/profile', { timeout: 3000 }); // 3 second API timeout
-          console.log('AuthContext: Token validation successful', response.data);
+          const response = await axios.get('/api/auth/profile');
           setUser(response.data);
         } catch (error) {
-          console.error('AuthContext: Token validation failed:', error);
+          console.error('Token validation failed:', error);
           localStorage.removeItem('token');
           setToken(null);
-          delete api.defaults.headers.common['Authorization'];
+          delete axios.defaults.headers.common['Authorization'];
         }
-      } else {
-        console.log('AuthContext: No token found');
       }
-      clearTimeout(timeout);
-      console.log('AuthContext: Initialization complete');
       setLoading(false);
     };
 
@@ -58,9 +45,9 @@ export const AuthProvider = ({ children }) => {
         const token = localStorage.getItem('token');
         if (token) {
           setToken(token);
-          api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+          axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
           
-          const response = await api.get('/api/auth/profile');
+          const response = await axios.get('/api/auth/profile');
           setUser(response.data);
           
           return { success: true };
@@ -68,13 +55,13 @@ export const AuthProvider = ({ children }) => {
         return { success: false, message: 'OAuth authentication failed' };
       }
       
-      const response = await api.post('/api/auth/login', { email, password });
+      const response = await axios.post('/api/auth/login', { email, password });
       const { token: newToken, user: userData } = response.data;
       
       localStorage.setItem('token', newToken);
       setToken(newToken);
       setUser(userData);
-      api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
+      axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
       
       return { success: true };
     } catch (error) {
@@ -87,13 +74,13 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (userData) => {
     try {
-      const response = await api.post('/api/auth/register', userData);
+      const response = await axios.post('/api/auth/register', userData);
       const { token: newToken, user: newUser } = response.data;
       
       localStorage.setItem('token', newToken);
       setToken(newToken);
       setUser(newUser);
-      api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
+      axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
       
       return { success: true };
     } catch (error) {
@@ -108,12 +95,12 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('token');
     setToken(null);
     setUser(null);
-    delete api.defaults.headers.common['Authorization'];
+    delete axios.defaults.headers.common['Authorization'];
   };
 
   const updateProfile = async (profileData) => {
     try {
-      const response = await api.put('/api/auth/profile', profileData);
+      const response = await axios.put('/api/auth/profile', profileData);
       setUser(response.data);
       return { success: true };
     } catch (error) {
@@ -125,7 +112,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const loginWithGoogle = () => {
-    window.location.href = `${process.env.REACT_APP_API_URL || 'https://learnit-1-dhm3.onrender.com'}/api/auth/google`;
+    window.location.href = 'http://localhost:5000/api/auth/google';
   };
 
   const value = {

@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { FaSave, FaTimes, FaTag, FaEye } from 'react-icons/fa';
+import { FaSave, FaTimes, FaTag, FaUsers, FaEye, FaEyeSlash } from 'react-icons/fa';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import api from '../api/axios';
+import axios from 'axios';
 import './CreateNote.css';
 
 const EditNote = () => {
@@ -25,24 +25,14 @@ const EditNote = () => {
   const [availableUsers, setAvailableUsers] = useState([]);
   const [showAccessControl, setShowAccessControl] = useState(false);
 
-  const hasEditAccess = useCallback((noteData) => {
-    if (!user || !noteData) return false;
-    
-    if (user.role === 'admin') return true;
-    
-    if (noteData.author?._id === user._id) return true;
-    
-    if (noteData.accessList && noteData.accessList.length > 0) {
-      const userAccess = noteData.accessList.find(access => access.user === user._id);
-      return userAccess && userAccess.accessType === 'edit';
-    }
-    
-    return false;
-  }, [user]);
+  useEffect(() => {
+    fetchNote();
+    fetchUsers();
+  }, [id]);
 
-  const fetchNote = useCallback(async () => {
+  const fetchNote = async () => {
     try {
-      const response = await api.get(`/api/notes/${id}`);
+      const response = await axios.get(`/api/notes/${id}`);
       const noteData = response.data;
       setNote(noteData);
       
@@ -64,21 +54,31 @@ const EditNote = () => {
     } finally {
       setLoading(false);
     }
-  }, [id, navigate, hasEditAccess]);
+  };
 
-  const fetchUsers = useCallback(async () => {
+  const fetchUsers = async () => {
     try {
-      const response = await api.get('/api/users');
+      const response = await axios.get('/api/users');
       setAvailableUsers(response.data.filter(u => u._id !== user._id));
     } catch (error) {
       console.error('Error fetching users:', error);
     }
-  }, [user._id]);
+  };
 
-  useEffect(() => {
-    fetchNote();
-    fetchUsers();
-  }, [id, fetchNote, fetchUsers]);
+  const hasEditAccess = (noteData) => {
+    if (!user || !noteData) return false;
+    
+    if (user.role === 'admin') return true;
+    
+    if (noteData.author?._id === user._id) return true;
+    
+    if (noteData.accessList && noteData.accessList.length > 0) {
+      const userAccess = noteData.accessList.find(access => access.user === user._id);
+      return userAccess && userAccess.accessType === 'edit';
+    }
+    
+    return false;
+  };
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -100,7 +100,8 @@ const EditNote = () => {
   };
 
   const handleTagsChange = (e) => {
-    setFormData({ ...formData, tags: e.target.value });
+    const tags = e.target.value.split(',').map(tag => tag.trim()).filter(tag => tag);
+    setFormData(prev => ({ ...prev, tags: e.target.value }));
     
     if (errors.tags) {
       setErrors(prev => ({ ...prev, tags: '' }));
@@ -167,7 +168,7 @@ const EditNote = () => {
         tags: formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag)
       };
 
-      await api.put(`/api/notes/${id}`, noteData);
+      await axios.put(`/api/notes/${id}`, noteData);
       
       navigate(`/notes/${id}`);
     } catch (error) {

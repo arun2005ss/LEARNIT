@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { FaGraduationCap, FaUsers, FaBook, FaComments, FaChartLine, FaRocket } from 'react-icons/fa';
-import api from '../api/axios';
+import axios from 'axios';
 import './Home.css';
 
 const Home = () => {
@@ -20,10 +20,10 @@ const Home = () => {
       try {
         if (user) {
           const [notesResponse, usersResponse] = await Promise.all([
-            api.get('/api/notes'),
+            axios.get('/api/notes'),
             user?.role === 'admin' 
-              ? api.get('/api/users/stats/overview')
-              : api.get('/api/users/stats/basic')
+              ? axios.get('/api/users/stats/overview')
+              : axios.get('/api/users/stats/basic')
           ]);
 
           const notes = notesResponse.data;
@@ -37,8 +37,8 @@ const Home = () => {
           });
         } else {
           const [notesResponse, usersResponse] = await Promise.all([
-            api.get('/api/notes/stats/public'),
-            api.get('/api/users/stats/public')
+            axios.get('/api/notes/stats/public'),
+            axios.get('/api/users/stats/public')
           ]);
 
           setStats({

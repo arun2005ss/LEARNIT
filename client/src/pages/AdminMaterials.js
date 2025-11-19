@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import api from '../api/axios';
+import axios from 'axios';
 import { FaFolderPlus, FaUpload, FaTrash, FaFolder } from 'react-icons/fa';
 import './AdminMaterials.css';
 
@@ -19,7 +19,7 @@ const AdminMaterials = () => {
   const fetchFolders = async () => {
     try {
       setLoading(true);
-      const res = await api.get('/api/materials/folders');
+      const res = await axios.get('/api/materials/folders');
       setFolders(res.data);
     } catch (e) {
       console.error('Failed to load folders', e);
@@ -33,7 +33,7 @@ const AdminMaterials = () => {
     if (!newFolder.title.trim()) return;
     try {
       setCreating(true);
-      const res = await api.post('/api/materials/folders', newFolder);
+      const res = await axios.post('/api/materials/folders', newFolder);
       setFolders(prev => [res.data, ...prev]);
       setNewFolder({ title: '', description: '' });
     } catch (e) {
@@ -54,7 +54,7 @@ const AdminMaterials = () => {
       setUploading(true);
       const formData = new FormData();
       files.forEach(f => formData.append('files', f));
-      const res = await api.post(`/api/materials/folders/${selectedFolder}/files`, formData, {
+      const res = await axios.post(`/api/materials/folders/${selectedFolder}/files`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       setFolders(prev => prev.map(f => f._id === res.data._id ? res.data : f));
@@ -68,7 +68,7 @@ const AdminMaterials = () => {
 
   const handleDeleteFile = async (folderId, fileId) => {
     try {
-      await api.delete(`/api/materials/folders/${folderId}/files/${fileId}`);
+      await axios.delete(`/api/materials/folders/${folderId}/files/${fileId}`);
       setFolders(prev => prev.map(f => {
         if (f._id !== folderId) return f;
         return { ...f, files: f.files.filter(file => file._id !== fileId) };
@@ -80,7 +80,7 @@ const AdminMaterials = () => {
 
   const handleDeleteFolder = async (folderId) => {
     try {
-      await api.delete(`/api/materials/folders/${folderId}`);
+      await axios.delete(`/api/materials/folders/${folderId}`);
       setFolders(prev => prev.filter(f => f._id !== folderId));
       if (selectedFolder === folderId) setSelectedFolder(null);
     } catch (e) {

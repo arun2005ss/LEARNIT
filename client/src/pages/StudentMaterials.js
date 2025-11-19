@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import api from '../api/axios';
+import axios from 'axios';
 import { FaFolder, FaFilePdf, FaFilePowerpoint, FaFileWord, FaFileExcel, FaDownload } from 'react-icons/fa';
 import './StudentMaterials.css';
 
@@ -20,7 +20,7 @@ const StudentMaterials = () => {
     const fetchFolders = async () => {
       try {
         setLoading(true);
-        const res = await api.get('/api/materials/folders');
+        const res = await axios.get('/api/materials/folders');
         setFolders(res.data);
       } catch (e) {
         console.error('Failed to load materials', e);

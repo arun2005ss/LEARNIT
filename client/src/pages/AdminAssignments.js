@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../contexts/AuthContext';
 import { FaPlus, FaEdit, FaTrash, FaEye, FaUsers, FaCalendar, FaFileAlt } from 'react-icons/fa';
-import api from '../api/axios';
+import axios from 'axios';
 import './AdminAssignments.css';
 
 const AdminAssignments = () => {
-    const [assignments, setAssignments] = useState([]);
+  const { user } = useAuth();
+  const [assignments, setAssignments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingAssignment, setEditingAssignment] = useState(null);
@@ -25,7 +27,7 @@ const AdminAssignments = () => {
 
   const fetchAssignments = async () => {
     try {
-      const response = await api.get('/api/assignments');
+      const response = await axios.get('/api/assignments');
       setAssignments(response.data);
     } catch (error) {
       console.error('Error fetching assignments:', error);
@@ -47,9 +49,9 @@ const AdminAssignments = () => {
     
     try {
       if (editingAssignment) {
-        await api.put(`/api/assignments/${editingAssignment._id}`, formData);
+        await axios.put(`/api/assignments/${editingAssignment._id}`, formData);
       } else {
-        await api.post('/api/assignments', formData);
+        await axios.post('/api/assignments', formData);
       }
       
       setShowForm(false);
@@ -80,7 +82,7 @@ const AdminAssignments = () => {
     if (!window.confirm('Are you sure you want to delete this assignment?')) return;
     
     try {
-      await api.delete(`/api/assignments/${id}`);
+      await axios.delete(`/api/assignments/${id}`);
       fetchAssignments();
     } catch (error) {
       console.error('Error deleting assignment:', error);

@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { FaArrowLeft, FaUser, FaCalendar, FaTag, FaComments, FaEdit, FaTrash } from 'react-icons/fa';
-import api from '../api/axios';
+import { FaArrowLeft, FaUser, FaCalendar, FaTag, FaEye, FaComments, FaEdit, FaTrash } from 'react-icons/fa';
+import axios from 'axios';
 import './NoteDetail.css';
 
 const NoteDetail = () => {
@@ -15,20 +15,20 @@ const NoteDetail = () => {
   const [submitting, setSubmitting] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
-  const fetchNote = useCallback(async () => {
+  useEffect(() => {
+    fetchNote();
+  }, [id]);
+
+  const fetchNote = async () => {
     try {
-      const response = await api.get(`/api/notes/${id}`);
+      const response = await axios.get(`/api/notes/${id}`);
       setNote(response.data);
     } catch (error) {
       console.error('Error fetching note:', error);
     } finally {
       setLoading(false);
     }
-  }, [id]);
-
-  useEffect(() => {
-    fetchNote();
-  }, [id, fetchNote]);
+  };
 
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
@@ -36,7 +36,7 @@ const NoteDetail = () => {
 
     try {
       setSubmitting(true);
-      await api.post(`/api/notes/${id}/comments`, { content: comment });
+      await axios.post(`/api/notes/${id}/comments`, { content: comment });
       setComment('');
       fetchNote();
     } catch (error) {
@@ -63,7 +63,7 @@ const NoteDetail = () => {
 
     try {
       setDeleting(true);
-      await api.delete(`/api/notes/${id}`);
+      await axios.delete(`/api/notes/${id}`);
       navigate('/notes');
     } catch (error) {
       console.error('Error deleting note:', error);
