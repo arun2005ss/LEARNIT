@@ -5,8 +5,7 @@ import api from '../api/axios';
 import './AdminAssignments.css';
 
 const AdminAssignments = () => {
-  const { user } = useAuth();
-  const [assignments, setAssignments] = useState([]);
+    const [assignments, setAssignments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingAssignment, setEditingAssignment] = useState(null);

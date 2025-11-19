@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { FaSave, FaTimes, FaTag, FaUsers, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FaSave, FaTimes, FaTag, FaEye } from 'react-icons/fa';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import api from '../api/axios';
@@ -28,7 +28,7 @@ const EditNote = () => {
   useEffect(() => {
     fetchNote();
     fetchUsers();
-  }, [id]);
+  }, [id, fetchNote, fetchUsers]);
 
   const fetchNote = async () => {
     try {
@@ -100,8 +100,7 @@ const EditNote = () => {
   };
 
   const handleTagsChange = (e) => {
-    const tags = e.target.value.split(',').map(tag => tag.trim()).filter(tag => tag);
-    setFormData(prev => ({ ...prev, tags: e.target.value }));
+    setFormData({ ...formData, tags: e.target.value });
     
     if (errors.tags) {
       setErrors(prev => ({ ...prev, tags: '' }));

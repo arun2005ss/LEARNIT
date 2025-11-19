@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { FaArrowLeft, FaUser, FaCalendar, FaTag, FaEye, FaComments, FaEdit, FaTrash } from 'react-icons/fa';
+import { FaArrowLeft, FaUser, FaCalendar, FaTag, FaComments, FaEdit, FaTrash } from 'react-icons/fa';
 import api from '../api/axios';
 import './NoteDetail.css';
 
@@ -17,7 +17,7 @@ const NoteDetail = () => {
 
   useEffect(() => {
     fetchNote();
-  }, [id]);
+  }, [id, fetchNote]);
 
   const fetchNote = async () => {
     try {

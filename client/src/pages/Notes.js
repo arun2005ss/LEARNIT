@@ -39,7 +39,7 @@ const Notes = () => {
 
   useEffect(() => {
     filterNotes();
-  }, [searchTerm, selectedTags, notes]);
+  }, [searchTerm, selectedTags, notes, filterNotes]);
 
   const filterNotes = () => {
     let filtered = notes;

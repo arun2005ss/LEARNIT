@@ -18,7 +18,7 @@ const CourseQuiz = () => {
 
   useEffect(() => {
     fetchQuizQuestions();
-  }, [courseId]);
+  }, [courseId, fetchQuizQuestions]);
 
   useEffect(() => {
     if (timeLeft > 0 && !quizCompleted) {
@@ -27,7 +27,7 @@ const CourseQuiz = () => {
     } else if (timeLeft === 0) {
       submitQuiz();
     }
-  }, [timeLeft, quizCompleted]);
+  }, [timeLeft, quizCompleted, submitQuiz]);
 
   const fetchQuizQuestions = async () => {
     try {
