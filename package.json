@@ -9,7 +9,13 @@
     "client": "cd client && npm start",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "install-all": "npm install && cd client && npm install",
-    "build": "cd client && npm run build"
+    "build": "cd client && npm run build",
+    "start:prod": "NODE_ENV=production node server/index.production.js",
+    "deploy": "chmod +x deploy.sh && ./deploy.sh",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f"
   },
   "keywords": [
     "mern",
