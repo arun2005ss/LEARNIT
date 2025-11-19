@@ -22,17 +22,30 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const initializeAuth = async () => {
+      console.log('AuthContext: Starting initialization');
+      // Add timeout to prevent infinite loading
+      const timeout = setTimeout(() => {
+        console.warn('Auth initialization timeout - proceeding without auth');
+        setLoading(false);
+      }, 5000); // 5 second timeout
+
       if (token) {
+        console.log('AuthContext: Token found, validating...');
         try {
-          const response = await api.get('/api/auth/profile');
+          const response = await api.get('/api/auth/profile', { timeout: 3000 }); // 3 second API timeout
+          console.log('AuthContext: Token validation successful', response.data);
           setUser(response.data);
         } catch (error) {
-          console.error('Token validation failed:', error);
+          console.error('AuthContext: Token validation failed:', error);
           localStorage.removeItem('token');
           setToken(null);
           delete api.defaults.headers.common['Authorization'];
         }
+      } else {
+        console.log('AuthContext: No token found');
       }
+      clearTimeout(timeout);
+      console.log('AuthContext: Initialization complete');
       setLoading(false);
     };
 
