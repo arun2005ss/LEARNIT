@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { FaSave, FaTimes, FaTag, FaEye } from 'react-icons/fa';
@@ -30,7 +30,7 @@ const EditNote = () => {
     fetchUsers();
   }, [id, fetchNote, fetchUsers]);
 
-  const fetchNote = async () => {
+  const fetchNote = useCallback(async () => {
     try {
       const response = await api.get(`/api/notes/${id}`);
       const noteData = response.data;
@@ -54,16 +54,16 @@ const EditNote = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id, navigate, hasEditAccess]);
 
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     try {
       const response = await api.get('/api/users');
       setAvailableUsers(response.data.filter(u => u._id !== user._id));
     } catch (error) {
       console.error('Error fetching users:', error);
     }
-  };
+  }, [user._id]);
 
   const hasEditAccess = (noteData) => {
     if (!user || !noteData) return false;

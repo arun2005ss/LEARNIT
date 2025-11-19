@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FaQuestionCircle, FaClock, FaCheckCircle, FaTimesCircle, FaArrowLeft, FaArrowRight, FaFlag } from 'react-icons/fa';
 import './CourseQuiz.css';
@@ -29,7 +29,7 @@ const CourseQuiz = () => {
     }
   }, [timeLeft, quizCompleted, submitQuiz]);
 
-  const fetchQuizQuestions = async () => {
+  const fetchQuizQuestions = useCallback(async () => {
     try {
       // Mock questions based on course
       const mockQuestions = generateMockQuestions(courseId);
@@ -39,7 +39,7 @@ const CourseQuiz = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [courseId]);
 
   const generateMockQuestions = (courseId) => {
     const courseQuestions = {
@@ -864,7 +864,7 @@ const CourseQuiz = () => {
     submitQuiz();
   };
 
-  const submitQuiz = () => {
+  const submitQuiz = useCallback(() => {
     let correctAnswers = 0;
     questions.forEach(question => {
       if (answers[question.id] === question.correct) {
@@ -878,7 +878,7 @@ const CourseQuiz = () => {
     
     // In real app, submit to backend
     console.log('Quiz submitted:', { answers, score: percentage });
-  };
+  }, [questions, answers]);
 
   const formatTime = (seconds) => {
     const hours = Math.floor(seconds / 3600);

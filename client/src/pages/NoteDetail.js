@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { FaArrowLeft, FaUser, FaCalendar, FaTag, FaComments, FaEdit, FaTrash } from 'react-icons/fa';
@@ -19,7 +19,7 @@ const NoteDetail = () => {
     fetchNote();
   }, [id, fetchNote]);
 
-  const fetchNote = async () => {
+  const fetchNote = useCallback(async () => {
     try {
       const response = await api.get(`/api/notes/${id}`);
       setNote(response.data);
@@ -28,7 +28,7 @@ const NoteDetail = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
 
   const handleCommentSubmit = async (e) => {
     e.preventDefault();

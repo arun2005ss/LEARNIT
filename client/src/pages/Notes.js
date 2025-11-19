@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { FaSearch, FaFilter, FaComments, FaCalendar, FaUser, FaTag } from 'react-icons/fa';
@@ -41,7 +41,7 @@ const Notes = () => {
     filterNotes();
   }, [searchTerm, selectedTags, notes, filterNotes]);
 
-  const filterNotes = () => {
+  const filterNotes = useCallback(() => {
     let filtered = notes;
 
     if (searchTerm) {
@@ -58,7 +58,7 @@ const Notes = () => {
     }
 
     setFilteredNotes(filtered);
-  };
+  }, [notes, searchTerm, selectedTags]);
 
   const handleTagToggle = (tag) => {
     setSelectedTags(prev =>
