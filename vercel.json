@@ -1,1 +1,1 @@
-﻿{"outputDirectory": "client/build", "installCommand": "npm install && cd client && npm install", "buildCommand": "cd client && npm run build", "framework": "create-react-app"}
+﻿{"version": 2, "builds": [{"src": "api/index.js", "use": "@vercel/node"}, {"src": "client/package.json", "use": "@vercel/static-build", "config": {"distDir": "build"}}], "routes": [{"src": "/api/(.*)", "dest": "/api/index.js"}, {"src": "/uploads/(.*)", "dest": "/server/uploads/$1"}, {"src": "/(.*)", "dest": "/client/$1"}]}
