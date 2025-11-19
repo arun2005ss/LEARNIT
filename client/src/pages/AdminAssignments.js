@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { FaPlus, FaEdit, FaTrash, FaEye, FaUsers, FaCalendar, FaFileAlt } from 'react-icons/fa';
-import axios from 'axios';
+import api from '../api/axios';
 import './AdminAssignments.css';
 
 const AdminAssignments = () => {

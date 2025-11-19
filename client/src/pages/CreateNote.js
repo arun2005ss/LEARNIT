@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { FaSave, FaTimes, FaTag } from 'react-icons/fa';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import axios from 'axios';
+import api from '../api/axios';
 import './CreateNote.css';
 
 const CreateNote = () => {

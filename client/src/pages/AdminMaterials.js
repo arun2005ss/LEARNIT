@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api/axios';
 import { FaFolderPlus, FaUpload, FaTrash, FaFolder } from 'react-icons/fa';
 import './AdminMaterials.css';
 

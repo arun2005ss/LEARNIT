@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FaFolder, FaDownload, FaSyncAlt } from 'react-icons/fa';
-import axios from 'axios';
+import api from '../api/axios';
 import './StudentDocuments.css';
 
 const StudentDocuments = () => {

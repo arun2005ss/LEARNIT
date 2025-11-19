@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api/axios';
 import { FaFolder, FaFilePdf, FaFilePowerpoint, FaFileWord, FaFileExcel, FaDownload } from 'react-icons/fa';
 import './StudentMaterials.css';
 

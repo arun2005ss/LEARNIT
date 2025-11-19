@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FaGraduationCap, FaBook, FaUsers, FaStar } from 'react-icons/fa';
-import axios from 'axios';
+import api from '../api/axios';
 import './StudentCourses.css';
 
 const StudentCourses = () => {

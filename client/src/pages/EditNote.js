@@ -4,7 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { FaSave, FaTimes, FaTag, FaUsers, FaEye, FaEyeSlash } from 'react-icons/fa';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import axios from 'axios';
+import api from '../api/axios';
 import './CreateNote.css';
 
 const EditNote = () => {

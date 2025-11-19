@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { FaArrowLeft, FaUser, FaCalendar, FaTag, FaEye, FaComments, FaEdit, FaTrash } from 'react-icons/fa';
-import axios from 'axios';
+import api from '../api/axios';
 import './NoteDetail.css';
 
 const NoteDetail = () => {

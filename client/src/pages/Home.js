@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { FaGraduationCap, FaUsers, FaBook, FaComments, FaChartLine, FaRocket } from 'react-icons/fa';
-import axios from 'axios';
+import api from '../api/axios';
 import './Home.css';
 
 const Home = () => {
