@@ -1,8 +1,19 @@
 {
+  "version": 2,
   "builds": [
-    { "src": "package.json", "use": "@vercel/static-build", "config": { "distDir": "build" } }
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": { 
+        "distDir": "build",
+        "env": {
+          "CI": "false"
+        }
+      }
+    }
   ],
   "routes": [
+    { "src": "/api/(.*)", "dest": "https://learnit-awe9.onrender.com" },
     { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
