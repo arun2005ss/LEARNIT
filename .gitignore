@@ -77,15 +77,17 @@ default-development/
 node_modules/.cache/
 
 # Next.js build output
+.next
+
 # Nuxt.js build / generate output
 .nuxt
 dist
 
- # Gatsby files
- .cache/
- /public
+# Gatsby files
+.cache/
+public
 
- # Storybook build outputs
+# Storybook build outputs
 .out
 .storybook-out
 

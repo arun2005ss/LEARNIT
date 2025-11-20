@@ -19,74 +19,22 @@ require('./config/passport');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+app.use(cors({
+  origin: process.env.CLIENT_URL || 'http://localhost:3000',
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const cors = require('cors');
-
-const rawAllowed = process.env.CLIENT_URLS || '';
-const allowedOrigins = rawAllowed
-  .split(',')
-  .map(u => u.trim())
-  .filter(Boolean);
-
-// Add Vercel preview URLs
-if (process.env.VERCEL_ENV === 'preview') {
-  const vercelUrl = `https://${process.env.VERCEL_URL}`;
-  if (!allowedOrigins.includes(vercelUrl)) {
-    allowedOrigins.push(vercelUrl);
-  }
-}
-
-// Configure CORS
-app.use(cors({
-  origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    
-    // In development, allow all origins
-    if (process.env.NODE_ENV !== 'production') {
-      return callback(null, true);
-    }
-    
-    // Check if the origin is allowed
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
-    
-    // Check for Vercel preview URLs
-    if (process.env.VERCEL_ENV === 'preview' && origin.includes('vercel.app')) {
-      return callback(null, true);
-    }
-    
-    console.warn(`Blocked request from unauthorized origin: ${origin}`);
-    return callback(new Error('Not allowed by CORS'), false);
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  exposedHeaders: ['set-cookie']
-}));
-
-// Trust first proxy (important for Vercel and Render)
-app.set('trust proxy', 1);
-
-// Session configuration
 app.use(session({
-  secret: process.env.SESSION_SECRET,
+  secret: process.env.SESSION_SECRET || 'your-session-secret',
   resave: false,
   saveUninitialized: false,
-  proxy: true, // Required for Vercel
   cookie: {
-    secure: true, // Requires HTTPS
-    sameSite: 'none', // Required for cross-site cookies
-    maxAge: 24 * 60 * 60 * 1000, // 24 hours
-    httpOnly: true,
-    // Don't set domain here to allow all subdomains to access the cookie
-  },
-  name: 'learnit.sid' // Custom session cookie name
+    secure: false,
+    maxAge: 24 * 60 * 60 * 1000
+  }
 }));
-
 
 app.use(passport.initialize());
 app.use(passport.session());
